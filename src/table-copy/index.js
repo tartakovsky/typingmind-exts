@@ -1,4 +1,4 @@
-// TypingMind Table Copy Extension - Fixed Version
+// TypingMind Table Copy Extension
 (function() {
     'use strict';
     
@@ -69,7 +69,7 @@
             padding: 12px 20px;
             border-radius: 6px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 999999;
+            z-index: 10000;
             font-family: system-ui, -apple-system, sans-serif;
             font-size: 14px;
             font-weight: 500;
@@ -92,18 +92,10 @@
             return;
         }
         
-        // Create wrapper div for positioning
-        const wrapper = document.createElement('div');
-        wrapper.style.cssText = `
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        `;
-        
-        // Create copy button with fixed styling
+        // Create copy button
         const copyBtn = document.createElement('button');
         copyBtn.className = 'table-copy-btn';
-        copyBtn.innerHTML = '📋 Copy Table';
+        copyBtn.innerHTML = '📋';
         copyBtn.style.cssText = `
             position: absolute !important;
             top: -40px !important;
@@ -127,22 +119,20 @@
             width: auto !important;
             line-height: normal !important;
             text-align: center !important;
-            vertical-align: middle !important;
             display: inline-block !important;
             box-sizing: border-box !important;
         `;
+
         
         // Add hover effects
         copyBtn.addEventListener('mouseenter', () => {
-            copyBtn.style.background = '#1976D2 !important';
-            copyBtn.style.transform = 'translateY(-2px) !important';
-            copyBtn.style.boxShadow = '0 4px 12px rgba(33, 150, 243, 0.4) !important';
+            copyBtn.style.background = '#1976D2';
+            copyBtn.style.transform = 'translateY(-1px)';
         });
         
         copyBtn.addEventListener('mouseleave', () => {
-            copyBtn.style.background = '#2196F3 !important';
-            copyBtn.style.transform = 'translateY(0) !important';
-            copyBtn.style.boxShadow = '0 2px 8px rgba(33, 150, 243, 0.3) !important';
+            copyBtn.style.background = '#2196F3';
+            copyBtn.style.transform = 'translateY(0)';
         });
         
         // Add click handler
@@ -156,21 +146,20 @@
             if (success) {
                 showNotification('✅ Table copied to clipboard!', 'success');
                 copyBtn.innerHTML = '✅ Copied!';
-                copyBtn.style.background = '#4CAF50 !important';
                 setTimeout(() => {
-                    copyBtn.innerHTML = '📋 Copy Table';
-                    copyBtn.style.background = '#2196F3 !important';
+                    copyBtn.innerHTML = '📋 Copy';
                 }, 2000);
             } else {
                 showNotification('❌ Failed to copy table', 'error');
             }
         });
         
-        // Wrap the table and add the button
-        const parent = table.parentNode;
-        parent.insertBefore(wrapper, table);
-        wrapper.appendChild(table);
-        wrapper.appendChild(copyBtn);
+        // Make table container relative positioned
+        const tableContainer = table.closest('div') || table.parentElement;
+        if (tableContainer) {
+            tableContainer.style.position = 'relative';
+            tableContainer.appendChild(copyBtn);
+        }
     }
     
     // Function to scan for tables and add copy buttons
@@ -204,7 +193,7 @@
             
             if (shouldScan) {
                 // Delay scanning to allow content to fully render
-                setTimeout(scanForTables, 200);
+                setTimeout(scanForTables, 100);
             }
         });
         
@@ -226,29 +215,6 @@
             @keyframes slideIn {
                 from { transform: translateX(100%); opacity: 0; }
                 to { transform: translateX(0); opacity: 1; }
-            }
-            
-            /* Ensure our button styles override any existing styles */
-            .table-copy-btn {
-                all: initial !important;
-                position: absolute !important;
-                top: -40px !important;
-                right: 0 !important;
-                background: #2196F3 !important;
-                color: white !important;
-                border: none !important;
-                padding: 8px 16px !important;
-                border-radius: 6px !important;
-                font-size: 13px !important;
-                font-weight: 600 !important;
-                cursor: pointer !important;
-                box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3) !important;
-                transition: all 0.2s ease !important;
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
-                z-index: 1000 !important;
-                white-space: nowrap !important;
-                display: inline-block !important;
-                box-sizing: border-box !important;
             }
         `;
         document.head.appendChild(style);
